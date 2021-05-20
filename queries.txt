@@ -1,0 +1,84 @@
+from books_authors_app.models import Book, Author
+
+CREATE:
+Book.objects.create(title="C Sharp", desc="Book about C Sharp")...
+
+UPDATE:
+c = Book.objects.get(id=4)
+c.first_name = "Bill"
+c.save()
+
+ASSIGN BOOKS TO AUTHORS (MANY-TO-MANY):
+this_book = Book.objects.get(id=1)	# retrieve an instance of a book
+this_author = Author.objects.get(id=1)	# retrieve an instance of a author
+
+
+this_author.books.add(this_book)		# add the book to this author's list of books
+
+
+
+REMOVE BOOKS FROM AUTHORS:    
+# 2 options that do the same thing:
+this_author.books.remove(this_book)		# remove the book from this author's list of books
+# OR
+this_book.authors.remove(this_author)	# remove the author from this book's list of authors
+
+
+second_auth.books.add(Book.objects.get(id=3))
+
+Query: Assign the fourth author to the first 5 books (or in other words, all the books):
+for book in Book.objects.all():
+    Author.objects.get(id=4).books.add(book)
+
+
+Query: Retrieve all the authors for the 3rd book
+GET (LIST - SPECIFIC Book's author):
+auth_name = Author.objects.filter(books=Book.objects.get(id=3))
+for author in auth_name:
+    print(author.first_name, author.last_name)
+
+
+Query: Remove the first author of the 3rd book
+Author.objects.get(id=1).books.remove(Book.objects.get(id=3))
+
+Query: Add the 5th author as one of the authors of the 2nd book
+Author.objects.get(id=5).books.add(Book.objects.get(id=2))
+
+
+Query: Find all the books that the 3rd author is part of
+Author.objects.get(id=3).books.all()
+for book in Author.objects.get(id=3).books.all():
+     print(book.title)
+
+Query: Find all the authors that contributed to the 5th book
+for auth in Author.objects.filter(books=Book.objects.get(id=5)):
+    print(auth.first_name, author.last_name)
+
+-------------------------------------------------------
+FROM OTHER QUERY SETS AS REF:
+
+
+GET (LIST):
+Book.objects.all()
+
+GET (Last):
+Book.objects.last()
+
+GET (First):
+Book.objects.first()
+
+DELETE:
+s = User.objects.get(id=2)
+s.delete()
+
+ORDER BY:
+User.objects.all().order_by("first_name") 
+- orders by field provided, ascending
+
+User.objects.all().order_by("-first_name")
+- orders by field provided, descending
+
+CREATE:
+Ninja.objects.create(dojo=Dojo.objects.get(id=4), first_name="Luke", last_name="Skywalker")
+Ninja.objects.create(dojo=Dojo.objects.get(id=4), first_name="Han", last_name="Solo")
+Ninja.objects.create(dojo=Dojo.objects.get(id=4), first_name="Leah", last_name="Skywalker")
